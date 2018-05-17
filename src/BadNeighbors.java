@@ -3,23 +3,30 @@ import java.time.Instant;
 import java.util.Arrays;
 
 public class BadNeighbors {
+	private int cache[] = new int[40];
 	
 	public int maxDonations(int[] donations) {
 		int[] semOPrimeiro = Arrays.copyOfRange(donations, 1, donations.length);
+		Arrays.fill(cache, -1);
 		int opt1 = avaliar(semOPrimeiro, semOPrimeiro.length - 1);
+		Arrays.fill(cache, -1);
 		int opt2 = avaliar(donations, donations.length - 2);
 		
 		return Math.max(opt1, opt2);
 	}
 	
 	private int avaliar(int[] values, int position) {
-		
 		if(position < 0) {
 			return 0;
 		}
 		
-		return Math.max(avaliar(values, position - 1), 
+		if (cache[position] >= 0) {
+			return cache[position];
+		}
+		
+		cache[position] = Math.max(avaliar(values, position - 1), 
 				avaliar(values, position - 2) + values[position]);
+		return cache[position];
 	}
 	
 	
