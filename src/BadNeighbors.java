@@ -7,26 +7,35 @@ public class BadNeighbors {
 	
 	public int maxDonations(int[] donations) {
 		int[] semOPrimeiro = Arrays.copyOfRange(donations, 1, donations.length);
-		Arrays.fill(cache, -1);
-		int opt1 = avaliar(semOPrimeiro, semOPrimeiro.length - 1);
-		Arrays.fill(cache, -1);
-		int opt2 = avaliar(donations, donations.length - 2);
+		
+		createCacheFrom(semOPrimeiro);
+		
+		int opt1 = cache[semOPrimeiro.length-1];
+
+		createCacheFrom(donations);
+		
+		int opt2 = cache[donations.length - 2];
 		
 		return Math.max(opt1, opt2);
 	}
 	
-	private int avaliar(int[] values, int position) {
-		if(position < 0) {
-			return 0;
-		}
+	private void createCacheFrom(int[] values) {
 		
-		if (cache[position] >= 0) {
-			return cache[position];
+		for (int i = 0; i < values.length; i++) {
+			
+			
+			if (i == 0) {
+				cache[i] = values[i];
+				continue;
+			}
+			
+			if (i == 1) {
+				cache[i] = Math.max(cache[i-1], values[i]);
+				continue;
+			}
+			
+			cache[i] = Math.max(cache[i-1], cache[i-2] + values[i]);
 		}
-		
-		cache[position] = Math.max(avaliar(values, position - 1), 
-				avaliar(values, position - 2) + values[position]);
-		return cache[position];
 	}
 	
 	
