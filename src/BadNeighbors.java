@@ -1,48 +1,25 @@
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 public class BadNeighbors {
-	private int max = 0; 
 	
 	public int maxDonations(int[] donations) {
-		int[] mark = new int[donations.length];
+		int[] semOPrimeiro = Arrays.copyOfRange(donations, 1, donations.length);
+		int opt1 = avaliar(semOPrimeiro, semOPrimeiro.length - 1);
+		int opt2 = avaliar(donations, donations.length - 2);
 		
-		avaliar(mark, donations, 0);
-		
-		return max;
+		return Math.max(opt1, opt2);
 	}
 	
-	private void avaliar(int[] marks, int[] values, int position) {
+	private int avaliar(int[] values, int position) {
 		
-		if (position >= marks.length) {
-			
-			if (marks[0] == 1 && marks[marks.length-1] == 1) {
-				return;
-			}
-			
-			int resultado = 0;
-			
-			for (int i = 0; i < marks.length; i++) {
-				if( marks[i] == 1) {
-					resultado += values[i];
-				}
-			}
-			
-			if (resultado > max) {
-				max = resultado;
-			}
-				
-			return;
+		if(position < 0) {
+			return 0;
 		}
 		
-		avaliar(marks, values, position + 1);
-		
-		marks[position] = 1;
-		
-		avaliar(marks, values, position + 2);
-				
-		marks[position] = 0;
-		
+		return Math.max(avaliar(values, position - 1), 
+				avaliar(values, position - 2) + values[position]);
 	}
 	
 	
